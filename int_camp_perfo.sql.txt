@@ -1,0 +1,14 @@
+
+SELECT
+    c.campaign_id,
+    c.campaign_name,
+    c.spend,
+    c.impressions,
+    c.clicks,
+    COALESCE(conv.revenue, 0) AS revenue,
+    c.date,
+    c.source_name
+FROM {{ ref('int_campaigns_unified') }} AS c
+LEFT JOIN {{ ref('stg_conversions') }} AS conv
+    ON c.campaign_id = conv.campaign_id
+    AND c.date = conv.date

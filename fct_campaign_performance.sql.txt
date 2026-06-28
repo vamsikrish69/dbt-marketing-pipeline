@@ -1,0 +1,16 @@
+
+{{ config(
+    materialized='table'
+) }}
+
+SELECT
+    campaign_id,
+    campaign_name,
+    source_name,
+    SUM(spend) AS total_spend,
+    SUM(impressions) AS total_impressions,
+    SUM(clicks) AS total_clicks,
+    SUM(revenue) AS total_revenue,
+    ROUND(SUM(revenue) / NULLIF(SUM(spend), 0), 2) AS roas
+FROM {{ ref('int_camp_perfo') }}
+GROUP BY campaign_id, campaign_name, source_name
